@@ -4,7 +4,7 @@ import shortUrl from "node-url-shortener";
 //fetching all links
 async function getLinks(req, res) {
   try {
-    const urls = await Url.find({ user: req.user.id });
+    const urls = await Url.find({});
     res.json({ message: "success", data: urls });
   } catch (error) {
     res.json({ message: error.message });
@@ -14,14 +14,14 @@ async function getLinks(req, res) {
 //post the links
 async function postLink(req, res) {
   try {
-    const userId = req.user.id;
+    // const userId = req.user.id;
     const { url } = req.body;
 
     //short the given url
 
     shortUrl.short(url, async function (err, shorturl) {
       try {
-        const URL = { url, shorturl, user: userId };
+        const URL = { url, shorturl };
         await Url.create(URL);
       } catch (error) {
         res.json({ message: err });
