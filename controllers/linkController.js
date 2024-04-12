@@ -7,7 +7,7 @@ async function getLinks(req, res) {
     const urls = await Url.find({ user: req.user.id });
     res.json({ message: "success", data: urls });
   } catch (error) {
-    res.json({ message: "somthing wrong" });
+    res.json({ message: error.message });
   }
 }
 
