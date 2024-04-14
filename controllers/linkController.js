@@ -4,8 +4,8 @@ import shortUrl from "node-url-shortener";
 //fetching all links related to the user
 async function getLinks(req, res) {
   try {
-    console.log(req);
-    const urls = await Url.find({});
+    const userId = req.user.id;
+    const urls = await Url.find({ user: userId });
     res.json({ message: "success", data: urls });
   } catch (error) {
     res.json({ message: error.message });

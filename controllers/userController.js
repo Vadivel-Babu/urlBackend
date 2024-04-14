@@ -17,7 +17,6 @@ async function signUp(req, res) {
     }
     return res.json({
       message: "user already exsist",
-      data: { name, email, password },
     });
   } catch (error) {
     return res.json({ message: error.message });
