@@ -12,14 +12,12 @@ async function signUp(req, res) {
       await newUser.save();
       return res.status(201).json({
         message: "user created",
-        user: { ...newUser, toktn: getToken(newUser._id) },
+        user: { newUser, token: getToken(newUser._id) },
       });
     }
     return res.json({
       message: "user already exsist",
       data: { name, email, password },
-      token: getToken(user._id),
-      status: true,
     });
   } catch (error) {
     return res.json({ message: error.message });
@@ -38,10 +36,10 @@ async function login(req, res) {
     if (!isMatch) {
       return res.status(401).json({ message: "Incorrect Password" });
     }
-    // const token = getToken(user);
+
     return res.json({
       message: "signin successsfully",
-      data: { user, token: getToken(user._id) },
+      user: { user, token: getToken(user._id) },
     });
   } catch (error) {
     console.log(error.message);
@@ -49,10 +47,16 @@ async function login(req, res) {
   }
 }
 
+async function logout(req, res) {
+  res.cookie("token", "", {
+    httpOnly: true,
+    expires: new Date(0),
+  });
+}
+
 function getToken(id) {
-  console.log(id);
   return jwt.sign({ id }, process.env.JWT_KEY, {
     expiresIn: "30d",
   });
 }
-export default { signUp, login };
+export default { signUp, login, logout };

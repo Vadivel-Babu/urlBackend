@@ -1,9 +1,10 @@
 import { Url } from "../models/urlmodel.js";
 import shortUrl from "node-url-shortener";
 
-//fetching all links
+//fetching all links related to the user
 async function getLinks(req, res) {
   try {
+    console.log(req);
     const urls = await Url.find({});
     res.json({ message: "success", data: urls });
   } catch (error) {
@@ -14,20 +15,19 @@ async function getLinks(req, res) {
 //post the links
 async function postLink(req, res) {
   try {
-    // const userId = req.user.id;
+    const userId = req.user.id;
     const { url } = req.body;
 
     //short the given url
-
     shortUrl.short(url, async function (err, shorturl) {
       try {
-        const URL = { url, shorturl };
+        const URL = { user: userId, url, shorturl };
         await Url.create(URL);
+        return res.status(201).json({ message: "success" });
       } catch (error) {
-        res.json({ message: err });
+        return res.json({ message: err });
       }
     });
-    res.status(201).json({ message: "success" });
   } catch (error) {
     res.json({ message: error.message });
   }
